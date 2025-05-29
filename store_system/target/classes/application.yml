@@ -55,12 +55,13 @@ server:
 project:
   cachePrefix: 'goods:'
 
+weixin:
+  appid: 'wx737031b53995366b'
+  secret: '09de29edcc733033413a859e15124696'
+
 
   #PageHelper分页插件
 pagehelper:
   helperDialect: mysql #数据库方言
   supportMethodsArguments: true   #是否支持传参
   params: count=countsql     #参数
-weixin:
-  appid: 'appid'
-  secret: '应用密钥'
