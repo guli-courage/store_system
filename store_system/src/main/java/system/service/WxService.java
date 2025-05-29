@@ -31,6 +31,7 @@ public class WxService {
         //之前存储在redis中的信息：{"session_key":"G59Evf\/Em54X6WsFsrpA1g==","openid":"o2ttv5L2yufc4-VoSPhTyUnToY60"}
         JSONObject jsonObject = JSON.parseObject(json);
         String sessionKey = (String) jsonObject.get("session_key");
+        System.out.println("sessionKey:"+sessionKey);
         byte[] encData = cn.hutool.core.codec.Base64.decode(encryptedData);
         byte[] iv = cn.hutool.core.codec.Base64.decode(vi);
         byte[] key = Base64.decode(sessionKey);

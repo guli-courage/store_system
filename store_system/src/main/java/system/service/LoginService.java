@@ -36,7 +36,7 @@ public class LoginService {
         String replaceUrl = url.replace("{0}", appid).replace("{1}", secret).replace("{2}", code);
         String res = HttpUtil.get(replaceUrl);
         String uuid = UUID.randomUUID().toString();
-        stringRedisTemplate.opsForValue().set(RedisKey.WX_SESSION_ID+uuid, res,30, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(RedisKey.WX_SESSION_ID+uuid, res);
         Map<String, String> map = new HashMap<>();
         map.put("sessionId", uuid);
 
@@ -44,7 +44,17 @@ public class LoginService {
     }
 
     public Result authLogin(WXAuth wxAuth) {
+
+        String url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_code";
+        String replaceUrl = url.replace("{0}", appid).replace("{1}", secret).replace("{2}",wxAuth.getCode());
+        String res = HttpUtil.get(replaceUrl);
+        String uuid = UUID.randomUUID().toString();
+        stringRedisTemplate.opsForValue().set(RedisKey.WX_SESSION_ID+uuid, res);
+        wxAuth.setSessionId(uuid);
+        System.out.println(uuid);
         try {
+
+
             String wxRes = wxService.wxDecrypt(wxAuth.getEncryptedData(), wxAuth.getSessionId(), wxAuth.getIv());
             //用户信息：{"openId":"o20","nickName":"juana","gender":2,"language":"zh_CN","city":"Changsha","province":"Hunan","country":"China","avatarUrl":"头像链接","watermark":{"timestamp":dsfs,"appid":"应用id"}}
             WxUserInfo wxUserInfo = JSON.parseObject(wxRes,WxUserInfo.class);

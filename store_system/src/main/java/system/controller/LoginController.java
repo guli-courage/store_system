@@ -19,11 +19,13 @@ public class LoginController {
 
     @GetMapping("getSessionId")
     public Result getSessionId(String code){
+        System.out.println(code);
         return loginService.getSessionId(code);
     }
 
     @PostMapping("/authLogin")
     public Result authLogin(@RequestBody WXAuth wxAuth) {
+        System.out.println(wxAuth);
         Result result = loginService.authLogin(wxAuth);
         log.info("{}",result);
         return result;
