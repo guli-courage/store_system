@@ -5,15 +5,21 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import system.common.RedisKey;
 import system.common.Result;
+import system.mapper.UserMapper;
 import system.model.WXAuth;
 import system.model.WxUserInfo;
 import com.alibaba.fastjson2.JSON;
 import org.springframework.beans.factory.annotation.Value;
+import system.pojo.User;
+import system.pojo.dto.UserDto;
+import system.utils.JWTUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +39,10 @@ public class LoginService {
 
     @Autowired
     WxService wxService;
+
+    @Autowired
+    @Qualifier("UserMapper")
+    private UserMapper userMapper;
 
     public Result getSessionId(String code) {
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_code";
@@ -70,13 +80,38 @@ public class LoginService {
             // 业务操作：你可以在这里利用数据 对数据库进行查询， 如果数据库中没有这个数据，就添加进去，即实现微信账号注册
             System.out.println(wxUserInfo);
             // 如果是已经注册过的，就利用数据，生成jwt 返回token，实现登录状态
-
-
-            return Result.SUCCESS(wxUserInfo);
+            User user = userMapper.selectByOpenId(wxUserInfo.getOpenid());
+            UserDto userDto = new UserDto();
+            userDto.from(wxUserInfo);
+            if (user == null) {
+                return this.register(userDto);
+            }else {
+                userDto.setUserId(user.getUserId());
+                return this.login(userDto);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return Result.FAIL();
     }
+
+    private Result login(UserDto userDto) {
+        String token = JWTUtils.sign(Long.valueOf(userDto.getUserId()));
+        userDto.setToken(token);
+        userDto.setUserOpenId(null);
+        userDto.setUserUnionId(null);
+        //把token存入redis
+        stringRedisTemplate.opsForValue().set(RedisKey.TOKEEN+token,JSON.toJSONString(userDto),7,TimeUnit.DAYS);
+        return Result.SUCCESS(userDto);
+    }
+
+    private Result register(UserDto userDto) {
+        User user = new User();
+        BeanUtils.copyProperties(userDto, user);
+        userMapper.insert(user);
+        userDto.setUserId(userMapper.selectByOpenId(userDto.getUserOpenId()).getUserId());
+        return this.login(userDto);
+    }
+
 
 }
