@@ -1,6 +1,7 @@
 package system.service;
 
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONObject;
@@ -64,7 +65,7 @@ public class LoginService {
         System.out.println("res:"+res);
         System.out.println();
         String uuid = UUID.randomUUID().toString();
-        stringRedisTemplate.opsForValue().set(RedisKey.WX_SESSION_ID+uuid, res);
+        stringRedisTemplate.opsForValue().set(RedisKey.WX_SESSION_ID+uuid, res, 30, TimeUnit.MINUTES);
         wxAuth.setSessionId(uuid);
         System.out.println("sessionID:"+uuid);
         try {
