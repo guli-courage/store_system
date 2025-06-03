@@ -27,7 +27,7 @@ public class LoginController {
     public Result authLogin(@RequestBody WXAuth wxAuth) {
         System.out.println(wxAuth);
         Result result = loginService.authLogin(wxAuth);
-        log.info("{}",result);
+        log.info("{返回的信息如下}",result);
         return result;
     }
 }
