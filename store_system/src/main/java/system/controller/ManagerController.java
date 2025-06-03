@@ -1,0 +1,22 @@
+package system.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import system.common.Result;
+import system.pojo.Manager;
+import system.service.ManagerService;
+
+@RestController
+@RequestMapping("manager")
+public class ManagerController {
+    @Autowired
+    private ManagerService managerService;
+
+    @PostMapping("/managerLogin")
+    public Result loggin(@RequestBody Manager manager) {
+        return managerService.managerLogin(manager);
+    }
+}
