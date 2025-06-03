@@ -16,7 +16,17 @@ public class ManagerController {
     private ManagerService managerService;
 
     @PostMapping("/managerLogin")
-    public Result loggin(@RequestBody Manager manager) {
+    public Result login(@RequestBody Manager manager) {
         return managerService.managerLogin(manager);
+    }
+
+    @RequestMapping("/searchStore")
+    public Result searchStore(){
+        return managerService.searchVerifyStore();
+    }
+
+    @RequestMapping("/updateStoreState")
+    public Result updateStoreState(String storeState,Integer storeId){
+        return managerService.updateState(storeState,storeId);
     }
 }

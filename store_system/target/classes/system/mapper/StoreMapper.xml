@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="system.mapper.StoreMapper">
+    <resultMap id="storeMapper" type="system.pojo.Store">
+        <id property="storeId" column="store_id" javaType="java.lang.Integer"/>
+        <result property="storeName" column="store_name" javaType="java.lang.String"/>
+        <result property="storeAvatar" column="store_avatar" javaType="java.lang.String"/>
+        <result property="storeState" column="store_state" javaType="java.lang.String"/>
+        <result property="storeDescription" column="store_description" javaType="java.lang.String"/>
+        <result property="storeAddress" column="store_address" javaType="java.lang.String"/>
+        <result property="storeUserId" column="store_user_id" javaType="java.lang.Integer"/>
+    </resultMap>
+    <select id="selectByState" resultMap="storeMapper">
+        SELECT
+            store.*
+        FROM
+            store
+        WHERE
+            store.store_state = #{storeState}
+    </select>
+
+    <update id="updateState">
+        UPDATE `store_system`.`store` SET `store_state` = #{storeState} WHERE `store_id` = #{storeId}
+    </update>
+</mapper>
