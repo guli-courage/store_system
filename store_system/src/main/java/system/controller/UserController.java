@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import system.common.Result;
 import system.model.WXAuth;
+import system.pojo.Store;
 import system.service.UserService;
 
 
@@ -25,5 +26,10 @@ public class UserController {
         Result result = userService.authLogin(wxAuth);
         //log.info("{返回的信息如下}",result);
         return result;
+    }
+
+    @PostMapping("/addStore")
+    public Result addStore(@RequestBody Store store) {
+        return userService.addStore(store);
     }
 }

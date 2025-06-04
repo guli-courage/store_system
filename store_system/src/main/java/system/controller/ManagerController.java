@@ -29,4 +29,6 @@ public class ManagerController {
     public Result updateStoreState(String storeState,Integer storeId){
         return managerService.updateState(storeState,storeId);
     }
+
+
 }

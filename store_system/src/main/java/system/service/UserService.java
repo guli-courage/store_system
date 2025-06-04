@@ -6,6 +6,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,12 +15,15 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import system.common.RedisKey;
 import system.common.Result;
+import system.mapper.StoreMapper;
 import system.mapper.UserMapper;
 import system.model.WXAuth;
 import system.model.WxUserInfo;
+import system.pojo.Store;
 import system.pojo.User;
 import system.pojo.dto.UserDto;
 import system.utils.JWTUtils;
+import system.vo.StoreVo;
 
 import java.util.concurrent.TimeUnit;
 
@@ -38,6 +42,10 @@ public class UserService {
     @Autowired
     @Qualifier("UserMapper")
     private UserMapper userMapper;
+
+    @Autowired
+    @Qualifier("StoreMapper")
+    private StoreMapper storeMapper;
 
     public Result authLogin(WXAuth wxAuth) {
 
@@ -94,5 +102,22 @@ public class UserService {
         return this.login(userDto);
     }
 
+    public Result addStore(Store store) {
+        store.setStoreState("verify");
+        StoreVo storeVo = new StoreVo();
+        BeanUtils.copyProperties(store, storeVo);
+        System.out.println("查询条件如下："+JSON.toJSONString(storeVo));
+        if (storeMapper.selectAll(storeVo)==null){
+            if (storeMapper.insertStore(store)!=0){
+                return Result.SUCCESS();
+            }else {
+                return Result.FAIL("创建失败");
+            }
+        }else {
+            return Result.FAIL("该商店已经申请");
+        }
 
+
+
+    }
 }
