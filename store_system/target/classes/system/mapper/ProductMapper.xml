@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="system.mapper.ProductMapper">
+    <resultMap id="productMapper" type="system.pojo.Product">
+
+        <id property="productId" column="product_id" javaType="java.lang.Integer"/>
+        <result property="productName" column="product_name" javaType="java.lang.String"/>
+        <result property="productPrice" column="product_price" javaType="java.lang.Double"/>
+        <result property="productStock" column="product_stock" javaType="java.lang.Integer"/>
+        <result property="productDescription" column="product_description" javaType="java.lang.String"/>
+        <result property="productStoreId" column="product_store_id" javaType="java.lang.Integer"/>
+        <result property="productTypeId" column="product_type_id" javaType="java.lang.Integer"/>
+        
+        <association property="productType" resultMap="system.mapper.ProductTypeMapper.productTypeMapper"/>
+    </resultMap>
+
+</mapper>
