@@ -10,10 +10,14 @@
         <result property="productPrice" column="product_price" javaType="java.lang.Double"/>
         <result property="productStock" column="product_stock" javaType="java.lang.Integer"/>
         <result property="productDescription" column="product_description" javaType="java.lang.String"/>
+        <result property="productState" column="product_state" javaType="java.lang.String"/>
         <result property="productStoreId" column="product_store_id" javaType="java.lang.Integer"/>
         <result property="productTypeId" column="product_type_id" javaType="java.lang.Integer"/>
         
         <association property="productType" resultMap="system.mapper.ProductTypeMapper.productTypeMapper"/>
     </resultMap>
+    <update id="updateState">
+        UPDATE `store_system`.`product` SET `product_state` = #{productState} WHERE `product_id` = #{productId}
+    </update>
 
 </mapper>
