@@ -59,13 +59,15 @@ weixin:
   appid: 'wx737031b53995366b'
   secret: '09de29edcc733033413a859e15124696'
 
-aliyun:
-  ENDPOINT: 'oss-cn-beijing.aliyuncs.com'
-  ACCESS_KEY_ID: ''
-  ACCESS_KEY_SECRET: ''
-  BUCKET_NAME: 'guli-stock'
-  #PageHelper分页插件
 pagehelper:
   helperDialect: mysql #数据库方言
   supportMethodsArguments: true   #是否支持传参
   params: count=countsql     #参数
+
+
+aliyun:
+  oss:
+    endpoint: 'oss-cn-beijing.aliyuncs.com'  # 替换为你的区域
+    access-key-id: ''
+    access-key-secret: ''
+    bucket-name: 'guli-stock'
