@@ -2,10 +2,8 @@ package system.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import system.common.Result;
 import system.pojo.Product;
-import system.pojo.ProductImage;
 import system.service.ProductService;
 
 @RestController

@@ -38,4 +38,9 @@ public class ManagerController {
         return productService.updateState(productState,productId);
     }
 
+    @RequestMapping("/searchProduct")
+    public Result searchProduct(Integer productStoreId){
+        return productService.searchVerify(productStoreId);
+    }
+
 }

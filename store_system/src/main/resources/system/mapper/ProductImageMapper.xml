@@ -11,4 +11,12 @@
     <insert id="insert">
         INSERT INTO `store_system`.`product_image` (`image_product_id`, `image_url`) VALUES (#{imageProductId}, #{imageUrl})
     </insert>
+    <select id="selectByProduct" resultMap="productImageMapper">
+        SELECT
+            product_image.*
+        FROM
+            product_image
+        WHERE
+            product_image.image_product_id = #{imageProductId}
+    </select>
 </mapper>

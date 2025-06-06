@@ -8,6 +8,7 @@ import system.mapper.ProductImageMapper;
 import system.mapper.ProductMapper;
 import system.pojo.Product;
 import system.pojo.ProductImage;
+import system.vo.ProductVo;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class ProductService {
     @Autowired
     @Qualifier("ProductImageMapper")
     private ProductImageMapper productImageMapper;
+
     public Result updateState(String productState, Integer productId) {
 
         if (productMapper.updateState(productState, productId) != 0) {
@@ -45,6 +47,17 @@ public class ProductService {
         }else {
             return Result.FAIL("商品已经存在");
         }
+    }
 
+    public Result searchVerify(Integer storeId) {
+        ProductVo productVo = new ProductVo();
+        productVo.setProductState("verify");
+        productVo.setProductStoreId(storeId);
+        List<Product> products = productMapper.selectByVo(productVo);
+        products.forEach(product->{
+            List<ProductImage> productImages = productImageMapper.selectByProduct(product.getProductId());
+            product.setProductImageList(productImages);
+        });
+        return Result.SUCCESS(products);
     }
 }

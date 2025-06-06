@@ -39,4 +39,32 @@
           AND product.product_store_id = #{productStoreId}
           AND product.product_name = #{productName}
     </select>
+    <select id="selectByVo" resultMap="productMapper">
+        SELECT product.*, product_type.*
+        FROM product
+        JOIN product_type ON product.product_type_id = product_type.type_id
+        <where>
+            <if test="productName  != null and productName !=''">
+                and product_name like '%${productName}%'
+            </if>
+            <if test="productPrice  != null and productPrice !=''">
+                and product_price = #{productPrice}
+            </if>
+            <if test="productStock  != null and productStock !=''">
+                and product_stock = #{productStock}
+            </if>
+            <if test="productSales  != null and productSales !=''">
+                and product_sales = #{productSales}
+            </if>
+            <if test="productState  != null and productState !=''">
+                and product_state = #{productState}
+            </if>
+            <if test="productStoreId  != null and productStoreId !=''">
+                and product_store_id = #{productStoreId}
+            </if>
+            <if test="productTypeId  != null and productTypeId !=''">
+                and product_type_id= #{productTypeId}
+            </if>
+        </where>
+    </select>
 </mapper>
