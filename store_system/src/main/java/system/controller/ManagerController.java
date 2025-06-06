@@ -6,6 +6,8 @@ import system.common.Result;
 import system.pojo.Manager;
 import system.service.ManagerService;
 import system.service.ProductService;
+import system.service.StoreService;
+import system.vo.StoreVo;
 
 @RestController
 @RequestMapping("manager")
@@ -15,7 +17,8 @@ public class ManagerController {
     private ManagerService managerService;
     @Autowired
     private ProductService productService;
-
+    @Autowired
+    private StoreService storeService;
 
 
     @PostMapping("/managerLogin")
@@ -43,4 +46,10 @@ public class ManagerController {
         return productService.searchVerify(productStoreId);
     }
 
+    @RequestMapping("/searchAllStore")
+    public Result searchAllStore(){
+        StoreVo storeVo = new StoreVo();
+        storeVo.setStoreState("verified");
+        return storeService.selectAllByVO(storeVo);
+    }
 }

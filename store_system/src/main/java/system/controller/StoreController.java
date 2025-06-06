@@ -20,7 +20,7 @@ public class StoreController {
     public Result searchStore(Integer storeUserId) {
         StoreVo storeVo = new StoreVo();
         storeVo.setStoreUserId(storeUserId);
-        return storeService.selectAll(storeVo);
+        return storeService.selectAllByVO(storeVo);
     }
 
     @PostMapping("/updateStore")

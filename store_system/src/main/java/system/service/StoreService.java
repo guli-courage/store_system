@@ -1,6 +1,6 @@
 package system.service;
 
-import lombok.val;
+import com.baomidou.mybatisplus.extension.api.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class StoreService {
     @Qualifier("StoreMapper")
     private StoreMapper storeMapper;
 
-    public Result selectAll(StoreVo storeVo) {
+    public Result selectAllByVO(StoreVo storeVo) {
         return Result.SUCCESS(storeMapper.selectAll(storeVo));
     }
 
