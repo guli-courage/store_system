@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductImage {
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer ImageId;
-    private Integer ImageProductId;
-    private String ImageUrl;
+    private Integer imageId;
+    private Integer imageProductId;
+    private String imageUrl;
 }

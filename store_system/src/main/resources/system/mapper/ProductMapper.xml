@@ -9,15 +9,34 @@
         <result property="productName" column="product_name" javaType="java.lang.String"/>
         <result property="productPrice" column="product_price" javaType="java.lang.Double"/>
         <result property="productStock" column="product_stock" javaType="java.lang.Integer"/>
+        <result property="productSales" column="product_sales" javaType="java.lang.Integer"/>
         <result property="productDescription" column="product_description" javaType="java.lang.String"/>
         <result property="productState" column="product_state" javaType="java.lang.String"/>
         <result property="productStoreId" column="product_store_id" javaType="java.lang.Integer"/>
         <result property="productTypeId" column="product_type_id" javaType="java.lang.Integer"/>
-        
+
         <association property="productType" resultMap="system.mapper.ProductTypeMapper.productTypeMapper"/>
     </resultMap>
     <update id="updateState">
-        UPDATE `store_system`.`product` SET `product_state` = #{productState} WHERE `product_id` = #{productId}
+        UPDATE `store_system`.`product`
+        SET `product_state` = #{productState}
+        WHERE `product_id` = #{productId}
     </update>
-
+    <insert id="insertProduct">
+        INSERT INTO `store_system`.`product` (`product_name`, `product_price`, `product_stock`, `product_sales`,
+                                              `product_description`, `product_state`, `product_store_id`,
+                                              `product_type_id`)
+        VALUES (#{productName}, #{productPrice}, #{productStock}, #{productSales}, #{productDescription}, 'verify',
+                #{productStoreId},
+                #{productTypeId})
+    </insert>
+    <select id="selectByNameAndStoreId" resultMap="productMapper">
+        SELECT product.*,
+               product_type.*
+        FROM product,
+             product_type
+        WHERE product.product_type_id = product_type.type_id
+          AND product.product_store_id = #{productStoreId}
+          AND product.product_name = #{productName}
+    </select>
 </mapper>
