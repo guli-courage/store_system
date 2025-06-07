@@ -20,7 +20,10 @@ public class UserController {
     private UserService userService;
 
 
-
+    /**
+     * 微信一键授权登录
+     * @param wxAuth（微信数据）
+     */
     @PostMapping("/authLogin")
     public Result authLogin(@RequestBody WXAuth wxAuth) {
         //System.out.println(wxAuth);
@@ -29,6 +32,10 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 用户商店创建
+     * @param store（用户填写的商店信息）
+     */
     @PostMapping("/addStore")
     public Result addStore(@RequestBody Store store) {
         return userService.addStore(store);

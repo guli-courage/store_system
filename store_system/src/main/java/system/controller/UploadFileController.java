@@ -27,7 +27,10 @@ public class UploadFileController {
     @Value("${aliyun.oss.bucket-name}")
     private String bucketName;
 
-
+    /**
+     * 图片文件上传Oss
+     * @param file（文件）
+     */
     @PostMapping("/uploadFile")
     public Result uploadFile(@RequestParam("file") MultipartFile file) {
         //完成图片的上传

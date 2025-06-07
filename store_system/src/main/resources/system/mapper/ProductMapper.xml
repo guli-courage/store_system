@@ -67,4 +67,31 @@
             </if>
         </where>
     </select>
+
+    <select id="selectOrder" resultMap="productMapper">
+        SELECT
+        p.product_id, p.product_name, p.product_price,
+        p.product_stock, p.product_sales, p.product_description,
+        p.product_state, p.product_store_id, p.product_type_id,
+        pt.type_id, pt.type_name
+        FROM product p
+        JOIN product_type pt ON p.product_type_id = pt.type_id
+        <where>
+            <if test="productName != null and productName != ''">
+                AND p.product_name LIKE concat('%', #{productName}, '%')
+            </if>
+            <if test="productPrice != null">
+                AND p.product_price <![CDATA[ <= ]]> #{productPrice}
+            </if>
+            <if test="productStoreId != null">
+                AND p.product_store_id = #{productStoreId}
+            </if>
+            <if test="productTypeId != null">
+                AND p.product_type_id = #{productTypeId}
+            </if>
+            AND p.product_stock <![CDATA[ > ]]> 0
+            AND p.product_state = 'verified'
+        </where>
+        ORDER BY p.product_sales DESC
+    </select>
 </mapper>

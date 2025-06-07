@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import system.common.Result;
 import system.mapper.ProductImageMapper;
 import system.mapper.ProductMapper;
+import system.mapper.ProductTypeMapper;
 import system.pojo.Product;
 import system.pojo.ProductImage;
 import system.vo.ProductVo;
@@ -22,6 +23,16 @@ public class ProductService {
     @Qualifier("ProductImageMapper")
     private ProductImageMapper productImageMapper;
 
+    @Autowired
+    @Qualifier("ProductTypeMapper")
+    private ProductTypeMapper productTypeMapper;
+
+    /**
+     * 根据商品的Id修改商品的状态
+     * @param productState
+     * @param productId
+     * @return 成功or失败
+     */
     public Result updateState(String productState, Integer productId) {
 
         if (productMapper.updateState(productState, productId) != 0) {
@@ -31,6 +42,11 @@ public class ProductService {
         }
     }
 
+    /**
+     * 用户填写商品信息，并向管理员申请上架该商品
+     * @param product
+     * @return 如果商品已经存在，返回错误
+     */
     public Result addProduct(Product product) {
         if (productMapper.selectByNameAndStoreId(product) == null) {
             if (productMapper.insertProduct(product) != 0) {
@@ -49,6 +65,11 @@ public class ProductService {
         }
     }
 
+    /**
+     * 根据商店ID查询全部审核中的商品
+     * @param storeId
+     * @return 返回该商店所有审核中的商品
+     */
     public Result searchVerify(Integer storeId) {
         ProductVo productVo = new ProductVo();
         productVo.setProductState("verify");
@@ -59,5 +80,18 @@ public class ProductService {
             product.setProductImageList(productImages);
         });
         return Result.SUCCESS(products);
+    }
+
+    /**
+     * 根据查询条件查询所有商品
+     * @param productVo
+     * @return 返回所有的商品并根据销量进行倒续排行
+     */
+    public Result searchProduct(ProductVo productVo) {
+        return Result.SUCCESS(productMapper.selectOrder(productVo));
+    }
+
+    public Result searchAllType(){
+        return Result.SUCCESS(productTypeMapper.selectAll());
     }
 }

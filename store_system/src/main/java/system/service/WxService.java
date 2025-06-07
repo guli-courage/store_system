@@ -21,6 +21,9 @@ public class WxService {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    /**
+     *破译微信传回的code，破译出各种用户数据
+     */
     public String wxDecrypt(String encryptedData, String sessionId, String vi) throws Exception {
         // 开始解密
         String json = redisTemplate.opsForValue().get(RedisKey.WX_SESSION_ID + sessionId);

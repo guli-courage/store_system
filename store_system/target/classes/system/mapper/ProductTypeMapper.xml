@@ -7,5 +7,10 @@
         <id property="typeId" column="type_id" javaType="java.lang.Integer"/>
         <result property="typeName" column="type_name" javaType="java.lang.String"/>
     </resultMap>
-
+    <select id="selectAll" resultMap="productTypeMapper">
+        SELECT
+            store_system.product_type.*
+        FROM
+            store_system.product_type
+    </select>
 </mapper>

@@ -16,6 +16,10 @@ public class StoreController {
     @Autowired
     private StoreService storeService;
 
+    /**
+     * 根据用户ID查询其所有的商店
+     * @param storeUserId（用户ID）
+     */
     @RequestMapping("/searchStore")
     public Result searchStore(Integer storeUserId) {
         StoreVo storeVo = new StoreVo();
@@ -23,6 +27,10 @@ public class StoreController {
         return storeService.selectAllByVO(storeVo);
     }
 
+    /**
+     * 更新用户信息并进入审核状态
+     * @param store（修改后的商店信息）
+     */
     @PostMapping("/updateStore")
     public Result updateStore(@RequestBody Store store) {
         return storeService.update(store);

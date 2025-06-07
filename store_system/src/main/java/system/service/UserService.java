@@ -47,6 +47,11 @@ public class UserService {
     @Qualifier("StoreMapper")
     private StoreMapper storeMapper;
 
+    /**
+     * 用户微信一键登录
+     * @param wxAuth（微信数据）
+     * @return 用户token及其他数据
+     */
     public Result authLogin(WXAuth wxAuth) {
 
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_code";
@@ -84,6 +89,11 @@ public class UserService {
         return Result.FAIL();
     }
 
+    /**
+     * 登录数据存储redis
+     * @param userDto（部分用户数据）
+     * @return 用户token及其他数据
+     */
     private Result login(UserDto userDto) {
         String token = JWTUtils.sign(Long.valueOf(userDto.getUserId()));
         userDto.setToken(token);
@@ -94,6 +104,11 @@ public class UserService {
         return Result.SUCCESS(userDto);
     }
 
+    /**
+     * 创建用户存储于数据库
+     * @param userDto（部分用户数据）
+     * @return 调用登录函数
+     */
     private Result register(UserDto userDto) {
         User user = new User();
         BeanUtils.copyProperties(userDto, user);
@@ -102,11 +117,15 @@ public class UserService {
         return this.login(userDto);
     }
 
+    /**
+     * 申请创建商店
+     * @param store（用户填写的商店数据)
+     * @return 如果商店不存在则创建成功，否则失败
+     */
     public Result addStore(Store store) {
         store.setStoreState("verify");
         StoreVo storeVo = new StoreVo();
         BeanUtils.copyProperties(store, storeVo);
-        System.out.println("查询条件如下："+JSON.toJSONString(storeVo));
         if (storeMapper.selectAll(storeVo)==null){
             if (storeMapper.insertStore(store)!=0){
                 return Result.SUCCESS();

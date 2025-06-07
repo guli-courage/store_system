@@ -13,4 +13,5 @@ public interface ProductMapper {
     int insertProduct(Product product);
     Product selectByNameAndStoreId(Product product);
     List<Product> selectByVo(ProductVo productVo);
+    List<Product> selectOrder(ProductVo productVo);
 }
