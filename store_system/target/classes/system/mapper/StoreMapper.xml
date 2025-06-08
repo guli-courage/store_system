@@ -28,6 +28,7 @@
         SET `store_name`        = #{storeName},
             `store_avatar`      = #{storeAvatar},
             `store_description` = #{storeDescription},
+            `store_storeState`  = 'verify',
             `store_address`     = #{storeAddress}
         WHERE `store_id` = #{storeId}
     </update>

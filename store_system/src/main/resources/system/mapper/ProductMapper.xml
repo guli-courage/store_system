@@ -80,13 +80,13 @@
             <if test="productName != null and productName != ''">
                 AND p.product_name LIKE concat('%', #{productName}, '%')
             </if>
-            <if test="productPrice != null">
+            <if test="productPrice  != null and productPrice !=''">
                 AND p.product_price <![CDATA[ <= ]]> #{productPrice}
             </if>
-            <if test="productStoreId != null">
+            <if test="productStoreId  != null and productStoreId !=''">
                 AND p.product_store_id = #{productStoreId}
             </if>
-            <if test="productTypeId != null">
+            <if test="productTypeId  != null and productTypeId !=''">
                 AND p.product_type_id = #{productTypeId}
             </if>
             AND p.product_stock <![CDATA[ > ]]> 0
@@ -94,4 +94,47 @@
         </where>
         ORDER BY p.product_sales DESC
     </select>
+
+    <select id="selectById" resultMap="productMapper">
+        SELECT
+            p.product_id, p.product_name, p.product_price,
+            p.product_stock, p.product_sales, p.product_description,
+            p.product_state, p.product_store_id, p.product_type_id,
+            pt.type_id, pt.type_name
+        FROM product p
+        JOIN product_type pt ON p.product_type_id = pt.type_id
+        WHERE product_id = #{productId}
+    </select>
+
+    <update id="updateProduct">
+        UPDATE `store_system`.`product`
+        SET `product_name`        = #{productName},
+            `product_price`       = #{productPrice},
+            `product_stock`       = #{productStock},
+            `product_sales`       = #{productSales},
+            `product_description` = #{productDescription},
+            `product_state`       = #{productState},
+            `product_type_id`     = #{productTypeId}
+        WHERE `product_id` = #{productId}
+    </update>
+
+    <update id="updateStock">
+        UPDATE `store_system`.`product`
+        SET `product_stock` = #{productStock}
+        WHERE `product_id` = #{productId}
+    </update>
+
+    <update id="updatePrice">
+        UPDATE `store_system`.`product`
+        SET `product_price` = #{productPrice}
+        WHERE `product_id` = #{productId}
+    </update>
+
+    <update id="updateSales">
+        UPDATE `store_system`.`product`
+        SET `product_sales` = #{productSales}
+        WHERE `product_id` = #{productId}
+    </update>
+
+
 </mapper>

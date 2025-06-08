@@ -91,7 +91,57 @@ public class ProductService {
         return Result.SUCCESS(productMapper.selectOrder(productVo));
     }
 
+    /**
+     * 查询所有的商品类型
+     * @return 商品类型队列
+     */
     public Result searchAllType(){
         return Result.SUCCESS(productTypeMapper.selectAll());
+    }
+
+    /**
+     * 修改商品信息
+     * @param product （修改后的商品信息）
+     * @return 成功or失败
+     */
+    public Result updateProduct(Product product) {
+        product.setProductState("verify");
+        if (productMapper.updateProduct(product)>0){
+            return Result.SUCCESS();
+        }else {
+            return Result.FAIL();
+        }
+    }
+
+    /**
+     * 商店为商品添加库存
+     * @param productId 商品Id
+     * @param newCount 新增商品数量
+     * @return 成功or失败
+     */
+    public Result updateStock(Integer productId, Integer newCount) {
+        Integer counts=productMapper.selectById(productId).getProductStock()+newCount;
+        if(productMapper.updateStock(counts,productId)>0){
+            return Result.SUCCESS();
+        } else{
+            return Result.FAIL();
+        }
+    }
+
+    /**
+     * 根据商品ID查询对应商品
+     * @param productId 商品ID
+     * @return 商品数据
+     */
+    public Result selectProductById(Integer productId) {
+        return Result.SUCCESS(productMapper.selectById(productId));
+    }
+
+    public Result updatePrice(Integer productId, Double newPrice) {
+        if (productMapper.updatePrice(newPrice,productId)>0){
+            return Result.SUCCESS();
+        }else {
+            return Result.FAIL();
+        }
     }
 }

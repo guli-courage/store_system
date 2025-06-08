@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import system.DoApp;
 import system.mapper.ProductMapper;
+import system.pojo.Product;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DoApp.class)
@@ -19,6 +20,15 @@ public class update {
     private ProductMapper productMapper;
     @Test
     public void update(){
-        int i = productMapper.updateState("verify", 1);
+       Product product = new Product();
+       product.setProductName("哇哈哈");
+       product.setProductPrice(5.0);
+       product.setProductStock(100);
+       product.setProductSales(15);
+       product.setProductDescription("甜牛奶");
+       product.setProductState("verify");
+       product.setProductTypeId(1);
+       product.setProductId(6);
+       productMapper.updateProduct(product);
     }
 }
