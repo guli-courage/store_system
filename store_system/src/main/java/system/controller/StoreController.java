@@ -28,7 +28,7 @@ public class StoreController {
     }
 
     /**
-     * 更新用户信息并进入审核状态
+     * 更新商店信息并进入审核状态
      * @param store（修改后的商店信息）
      */
     @PostMapping("/updateStore")

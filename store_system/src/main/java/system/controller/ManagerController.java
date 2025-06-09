@@ -38,7 +38,7 @@ public class ManagerController {
     }
 
     /**
-     * 修改审核中商品的状态（上架或者回退）
+     * 修改审核中商店的状态（上架或者回退）
      * @param storeState（商店状态）
      * @param storeId（商店Id）
      */
@@ -74,5 +74,10 @@ public class ManagerController {
         StoreVo storeVo = new StoreVo();
         storeVo.setStoreState("verified");
         return storeService.selectAllByVO(storeVo);
+    }
+
+    @RequestMapping("/addProductType")
+    public Result addProductType(String typeName){
+        return productService.addProductType(typeName);
     }
 }

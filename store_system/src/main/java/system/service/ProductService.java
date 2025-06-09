@@ -158,4 +158,12 @@ public class ProductService {
             return false;
         }
     }
+
+    public Result addProductType(String productTypeName) {
+        if (productTypeMapper.insert(productTypeName)>0) {
+            return Result.SUCCESS();
+        }else {
+            return Result.FAIL();
+        }
+    }
 }

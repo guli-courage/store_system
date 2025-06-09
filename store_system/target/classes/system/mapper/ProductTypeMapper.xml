@@ -13,4 +13,7 @@
         FROM
             store_system.product_type
     </select>
+    <insert id="insert">
+        INSERT INTO `store_system`.`product_type` (`type_name`) VALUES (#{typeName})
+    </insert>
 </mapper>
