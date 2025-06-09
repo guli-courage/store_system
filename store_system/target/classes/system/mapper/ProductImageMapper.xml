@@ -19,4 +19,7 @@
         WHERE
             product_image.image_product_id = #{imageProductId}
     </select>
+    <delete id="delete">
+        DELETE FROM `store_system`.`product_image` WHERE `image_url` = #{imageUrl}
+    </delete>
 </mapper>

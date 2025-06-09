@@ -10,4 +10,5 @@ import java.util.List;
 public interface ProductImageMapper {
     int insert(ProductImage image);
     List<ProductImage> selectByProduct(@Param("imageProductId")Integer productId);
+    Integer delete(@Param("imageUrl")String imageUrl);
 }

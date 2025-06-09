@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import system.common.Result;
 import system.pojo.Product;
+import system.service.FileService;
 import system.service.ProductService;
 import system.vo.ProductVo;
 
@@ -13,6 +14,9 @@ import system.vo.ProductVo;
 public class ProductController {
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private FileService fileService;
 
     /**
      * 商店申请新增商品
@@ -78,4 +82,20 @@ public class ProductController {
         return productService.updatePrice(productId,newPrice);
     }
 
+    @RequestMapping("/deleteImage")
+    public Result deleteImage(String imageUrl) {
+        Boolean b = productService.deleteImage(imageUrl);
+        if (b){
+            try {
+                fileService.deleteImage(imageUrl);
+                return Result.SUCCESS("删除成功");
+            } catch (Exception e) {
+                return Result.FAIL("OSS删除失败");
+            }
+        }else {
+            return Result.FAIL("数据库删除失败");
+        }
+
+
+    }
 }

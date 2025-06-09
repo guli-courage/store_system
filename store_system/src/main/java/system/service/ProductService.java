@@ -137,11 +137,25 @@ public class ProductService {
         return Result.SUCCESS(productMapper.selectById(productId));
     }
 
+    /**
+     * 根据商品Id修改商品价格
+     * @param productId 商品Id
+     * @param newPrice 新的商品价格
+     * @return 成功or失败
+     */
     public Result updatePrice(Integer productId, Double newPrice) {
         if (productMapper.updatePrice(newPrice,productId)>0){
             return Result.SUCCESS();
         }else {
             return Result.FAIL();
+        }
+    }
+
+    public Boolean deleteImage(String imageUrl){
+        if (productImageMapper.delete(imageUrl)>0) {
+            return true;
+        }else {
+            return false;
         }
     }
 }
