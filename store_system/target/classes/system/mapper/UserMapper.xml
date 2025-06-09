@@ -21,8 +21,34 @@
         WHERE
             `user`.user_openId = #{userOpenId}
     </select>
+
+    <select id="selectByNameAndPassword" resultMap="userMapper">
+        SELECT
+            user_id,
+            user_name,
+            user_password,
+            user_gender,
+            user_openId,
+            user_nickname,
+            user_avatar,
+            user_unionId
+        FROM
+            `user`
+        WHERE
+            user_name = #{userName} AND
+            user_password = #{userPassword}
+    </select>
+
     <insert id="insert">
         INSERT INTO `store_system`.`user` (`user_name`, `user_password`, `user_gender`, `user_openId`, `user_nickname`, `user_avatar`, `user_unionId`)
         VALUES (#{userName}, #{userPassword}, #{userGender}, #{userOpenId}, #{userNickname}, #{userAvatar}, #{userUnionId})
     </insert>
+
+    <update id="updateUserName">
+        UPDATE `store_system`.`user` SET `user_name` = #{userName} WHERE `user_id` = #{userId}
+    </update>
+
+    <update id="updateUserPassword">
+        UPDATE `store_system`.`user` SET `user_password` = #{userPassword} WHERE `user_id` = #{userId}
+    </update>
 </mapper>

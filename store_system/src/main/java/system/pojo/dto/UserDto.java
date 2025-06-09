@@ -17,9 +17,7 @@ public class UserDto {
     private String userNickname;
     private String userAvatar;
     private String userUnionId;
-
     private String token;
-
     private String code;
 
     public void from(WxUserInfo wxUserInfo) {

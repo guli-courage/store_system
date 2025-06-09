@@ -23,6 +23,7 @@ import system.pojo.Store;
 import system.pojo.User;
 import system.pojo.dto.UserDto;
 import system.utils.JWTUtils;
+import system.utils.MD5Util;
 import system.vo.StoreVo;
 
 import java.util.concurrent.TimeUnit;
@@ -61,7 +62,7 @@ public class UserService {
         //将用户数据存入redis
         stringRedisTemplate.opsForValue().set(RedisKey.WX_SESSION_ID + uuid, res, 30, TimeUnit.MINUTES);
         wxAuth.setSessionId(uuid);
-        System.out.println("sessionID:" + uuid);
+//        System.out.println("sessionID:" + uuid);
         try {
             String wxRes = wxService.wxDecrypt(wxAuth.getEncryptedData(), wxAuth.getSessionId(), wxAuth.getIv());
              log.info("用户信息："+wxRes);
@@ -73,7 +74,7 @@ public class UserService {
             String openid = (String) jsonObject.get("openid");
             wxUserInfo.setOpenid(openid);
             // 业务操作：你可以在这里利用数据 对数据库进行查询， 如果数据库中没有这个数据，就添加进去，即实现微信账号注册
-              System.out.println(wxUserInfo);
+            // System.out.println(wxUserInfo);
             // 如果是已经注册过的，就利用数据，生成jwt 返回token，实现登录状态
             User user = userMapper.selectByOpenId(wxUserInfo.getOpenid());
             UserDto userDto = new UserDto();
@@ -82,6 +83,8 @@ public class UserService {
                 return this.register(userDto);
             } else {
                 userDto.setUserId(user.getUserId());
+                userDto.setUserName(user.getUserName());
+                userDto.setUserPassword(user.getUserPassword());
                 return this.login(userDto);
             }
         } catch (Exception e) {
@@ -136,8 +139,62 @@ public class UserService {
         }else {
             return Result.FAIL("该商店已经申请");
         }
+    }
 
+    /**
+     * 设置用户APP名称
+     * @param name 新名称
+     * @param token 用户数据识别字段
+     * @return 成功or失败
+     */
+    public Result updateUserName(String name, String token) {
+        String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + token);
+        JSONObject jsonObject = JSON.parseObject(json);
+        Integer userId = Integer.valueOf(jsonObject.getString("userId"));
+        if (userMapper.updateUserName(name,userId)>0){
+            return Result.SUCCESS("修改成功");
+        }else {
+            return Result.FAIL("修改失败");
+        }
+    }
 
+    /**
+     * 设置用户密码并加密存储在数据库
+     * @param userPassword 用户密码
+     * @param token 用户数据识别字段
+     * @return 成功or失败
+     */
+    public Result updatePassword(String userPassword, String token) {
+        String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + token);
+        JSONObject jsonObject = JSON.parseObject(json);
+        Integer userId = Integer.valueOf(jsonObject.getString("userId"));
+        userPassword = MD5Util.MD5ToString(userPassword);
+        if (userMapper.updateUserPassword(userPassword,userId)>0){
+            return Result.SUCCESS();
+        }else {
+            return Result.FAIL();
+        }
+    }
 
+    /**
+     * 处理前端传回的账号密码，验证用户是否存在
+     * @param userName 用户账号
+     * @param userPassword 用户密码
+     * @return 用户各个的数据（将openId和unionId设置为空）
+     */
+    public Result loginByName(String userName, String userPassword) {
+        userPassword = MD5Util.MD5ToString(userPassword);
+        User user = userMapper.selectByNameAndPassword(userName, userPassword);
+        if (user==null){
+            return Result.FAIL("该账号不存在");
+        }else {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(user, userDto);
+            String token = JWTUtils.sign(Long.valueOf(user.getUserId()));
+            userDto.setToken(token);
+            userDto.setUserOpenId(null);
+            userDto.setUserUnionId(null);
+            return Result.SUCCESS(userDto);
+        }
     }
 }
