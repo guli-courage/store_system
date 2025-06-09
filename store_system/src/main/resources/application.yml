@@ -71,3 +71,4 @@ aliyun:
     access-key-id: ''
     access-key-secret: ''
     bucket-name: 'guli-stock'
+    url-prefix: 'https://guli-stock.oss-cn-beijing.aliyuncs.com/'
