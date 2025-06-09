@@ -27,7 +27,7 @@ public class UserDto {
         this.userPassword ="";
         this.userGender = wxUserInfo.getGender();
         this.userOpenId = wxUserInfo.getOpenid();
-        this.userNickname = wxUserInfo.getNickname();
+        this.userNickname = wxUserInfo.getNickName();
         this.userAvatar = wxUserInfo.getAvatarUrl();
         this.userUnionId = wxUserInfo.getUnionId();
 

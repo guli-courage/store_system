@@ -58,21 +58,22 @@ public class UserService {
         String replaceUrl = url.replace("{0}", appid).replace("{1}", secret).replace("{2}", wxAuth.getCode());
         String res = HttpUtil.get(replaceUrl);
         String uuid = UUID.randomUUID().toString();
+        //将用户数据存入redis
         stringRedisTemplate.opsForValue().set(RedisKey.WX_SESSION_ID + uuid, res, 30, TimeUnit.MINUTES);
         wxAuth.setSessionId(uuid);
         System.out.println("sessionID:" + uuid);
         try {
             String wxRes = wxService.wxDecrypt(wxAuth.getEncryptedData(), wxAuth.getSessionId(), wxAuth.getIv());
-            // log.info("用户信息："+wxRes);
+             log.info("用户信息："+wxRes);
             //用户信息：{"openId":"o20","nickName":"juana","gender":2,"language":"zh_CN","city":"Changsha","province":"Hunan","country":"China","avatarUrl":"头像链接","watermark":{"timestamp":dsfs,"appid":"应用id"}}
             WxUserInfo wxUserInfo = JSON.parseObject(wxRes, WxUserInfo.class);
-            //由于获取用户数据不再拿到openId,所以直接调用redis，从其中获取
+            //调用redis，从其中获取OpenId
             String json = stringRedisTemplate.opsForValue().get(RedisKey.WX_SESSION_ID + uuid);
             JSONObject jsonObject = JSON.parseObject(json);
             String openid = (String) jsonObject.get("openid");
             wxUserInfo.setOpenid(openid);
             // 业务操作：你可以在这里利用数据 对数据库进行查询， 如果数据库中没有这个数据，就添加进去，即实现微信账号注册
-            //  System.out.println(wxUserInfo);
+              System.out.println(wxUserInfo);
             // 如果是已经注册过的，就利用数据，生成jwt 返回token，实现登录状态
             User user = userMapper.selectByOpenId(wxUserInfo.getOpenid());
             UserDto userDto = new UserDto();
