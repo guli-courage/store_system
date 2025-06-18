@@ -45,7 +45,7 @@ public class insert {
     }
     @Test
     public void select2() {
-        List<CartItems> select = cartItemsMapper.select(1);
+        List<CartItems> select = cartItemsMapper.select(0);
         System.out.println(select);
     }
 
