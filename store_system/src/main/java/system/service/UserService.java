@@ -26,6 +26,7 @@ import system.utils.JWTUtils;
 import system.utils.MD5Util;
 import system.vo.StoreVo;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -130,7 +131,8 @@ public class UserService {
         store.setStoreState("verify");
         StoreVo storeVo = new StoreVo();
         BeanUtils.copyProperties(store, storeVo);
-        if (storeMapper.selectAll(storeVo)==null){
+        List<Store> stores = storeMapper.selectAll(storeVo);
+        if (stores ==null || stores.isEmpty()){
             if (storeMapper.insertStore(store)!=0){
                 return Result.SUCCESS();
             }else {
