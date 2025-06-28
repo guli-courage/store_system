@@ -134,7 +134,9 @@ public class ProductService {
      * @return 商品数据
      */
     public Result selectProductById(Integer productId) {
-        return Result.SUCCESS(productMapper.selectById(productId));
+        Product product = productMapper.selectById(productId);
+        product.setProductImageList(productImageMapper.selectByProduct(productId));
+        return Result.SUCCESS(product);
     }
 
     /**
