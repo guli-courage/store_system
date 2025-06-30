@@ -90,7 +90,7 @@
                 AND p.product_type_id = #{productTypeId}
             </if>
             AND p.product_stock <![CDATA[ > ]]> 0
-            AND p.product_state = 'verified'
+            AND p.product_state = #{productState}
         </where>
         ORDER BY p.product_sales DESC
     </select>

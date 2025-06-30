@@ -72,7 +72,7 @@
         WHERE `orders_id` = #{ordersId}
     </update>
 
-    
+
     <!-- 删除订单 -->
     <delete id="deleteOrder">
         DELETE FROM `orders`
