@@ -88,7 +88,11 @@ public class ProductService {
      * @return 返回所有的商品并根据销量进行倒续排行
      */
     public Result searchProduct(ProductVo productVo) {
-        return Result.SUCCESS(productMapper.selectOrder(productVo));
+        List<Product> products = productMapper.selectOrder(productVo);
+        products.forEach(product->{
+            product.setProductImageList(productImageMapper.selectByProduct(product.getProductId()));
+        });
+        return Result.SUCCESS(products);
     }
 
     /**
