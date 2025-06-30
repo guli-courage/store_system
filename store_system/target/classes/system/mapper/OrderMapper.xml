@@ -15,7 +15,7 @@
     </resultMap>
 
     <!-- 插入新订单 -->
-    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="ordersId">
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="ordersId" keyColumn="orders_id">
         INSERT INTO `store_system`.`orders` (
             `orders_user_id`,
             `orders_amount`,
