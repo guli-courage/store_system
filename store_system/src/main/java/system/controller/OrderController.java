@@ -26,7 +26,7 @@ public class OrderController {
     }
 
     @PostMapping("/searchByUser")
-    public Result searchOrder(OrderDto orderDto) {
+    public Result searchOrder(@RequestBody OrderDto orderDto) {
         return orderService.searchByUser(orderDto);
     }
 
