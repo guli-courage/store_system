@@ -7,6 +7,7 @@ import system.common.Result;
 import system.model.WXAuth;
 import system.pojo.Store;
 import system.pojo.UserAddress;
+import system.pojo.dto.OrderDto;
 import system.pojo.dto.UserAddressDto;
 import system.pojo.dto.UserDto;
 import system.service.UserAddressService;
@@ -77,8 +78,8 @@ public class UserController {
     }
 
     @PostMapping("/addAddress")
-    public Result addAddress(@RequestBody UserAddress userAddress) {
-        return userAddressService.insert(userAddress);
+    public Result addAddress(@RequestBody OrderDto orderDto) {
+        return userAddressService.insert(orderDto);
     }
 
     @PostMapping("/setDefault")

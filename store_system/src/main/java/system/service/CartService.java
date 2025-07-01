@@ -9,7 +9,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import system.common.RedisKey;
 import system.common.Result;
-import system.controller.CartController;
 import system.mapper.CartItemsMapper;
 import system.mapper.CartsMapper;
 import system.mapper.ProductImageMapper;
@@ -50,14 +49,14 @@ public class CartService {
         Integer userId = Integer.valueOf(jsonObject.getString("userId"));
         Carts cart = cartsMapper.select(userId);
         if (cart != null) {
-            List<CartItems> select = cartItemsMapper.select(cart.getCartId());
+            List<CartItems> cartItemsList = cartItemsMapper.select(cart.getCartId());
             List<Product> productList = new ArrayList<>();
-            select.forEach(cartItems -> {
+            cartItemsList.forEach(cartItems -> {
                 Product product = productMapper.selectById(cartItems.getProductId());
                 product.setProductImageList(productImageMapper.selectByProduct(product.getProductId()));
-                productList.add(product);
+                cartItems.setProduct(product);
             });
-            return Result.SUCCESS(productList);
+            return Result.SUCCESS(cartItemsList);
         }else {
             cartsMapper.insert(userId);
             return Result.SUCCESS(cartItemsMapper.select(0));

@@ -10,6 +10,7 @@ import system.common.RedisKey;
 import system.common.Result;
 import system.mapper.UserAddressMapper;
 import system.pojo.UserAddress;
+import system.pojo.dto.OrderDto;
 
 import java.util.List;
 
@@ -51,10 +52,15 @@ public class UserAddressService {
 
     /**
      * 添加用户地址
-     * @param userAddress 地址对象
+     * @param orderDto token和地址信息
      * @return 操作结果
      */
-    public Result insert(UserAddress userAddress) {
+    public Result insert(OrderDto orderDto) {
+        String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + orderDto.getToken());
+        JSONObject jsonObject = JSON.parseObject(json);
+        Integer userId = Integer.valueOf(jsonObject.getString("userId"));
+        UserAddress userAddress = orderDto.getUserAddress();
+        userAddress.setUserId(userId);
         // 如果是设置默认地址，先取消其他默认地址
         if (Boolean.TRUE.equals(userAddress.getIsDefault())) {
             userAddressMapper.cancelDefaultAddresses(userAddress.getUserId());
