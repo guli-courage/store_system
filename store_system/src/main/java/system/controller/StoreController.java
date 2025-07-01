@@ -1,10 +1,15 @@
 package system.controller;
 
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
+import system.common.RedisKey;
 import system.common.Result;
 import system.pojo.Store;
+import system.pojo.dto.UserDto;
 import system.service.StoreService;
 import system.vo.StoreVo;
 
@@ -16,14 +21,20 @@ public class StoreController {
     @Autowired
     private StoreService storeService;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     /**
      * 根据用户ID查询其所有的商店
-     * @param storeUserId（用户ID）
+     * @param userDto 只传用户token
      */
-    @RequestMapping("/searchStore")
-    public Result searchStore(Integer storeUserId) {
+    @PostMapping("/searchStore")
+    public Result searchStore(UserDto userDto) {
+        String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + userDto.getToken());
+        JSONObject jsonObject = JSON.parseObject(json);
+        Integer userId = Integer.valueOf(jsonObject.getString("userId"));
         StoreVo storeVo = new StoreVo();
-        storeVo.setStoreUserId(storeUserId);
+        storeVo.setStoreUserId(userId);
         return storeService.selectAllByVO(storeVo);
     }
 
