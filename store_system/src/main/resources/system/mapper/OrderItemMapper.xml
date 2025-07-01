@@ -42,6 +42,13 @@
         WHERE `order_item_id` = #{orderItemId}
     </select>
 
+    <!-- 根据商品ID查询订单项 -->
+    <select id="selectByProductId" resultMap="orderItemMapper">
+        SELECT *
+        FROM `order_item`
+        WHERE `product_id` = #{productId}
+    </select>
+
     <!-- 更新订单项数量 -->
     <update id="updateQuantity">
         UPDATE `store_system`.`order_item`

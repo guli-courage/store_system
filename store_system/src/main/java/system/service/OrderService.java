@@ -11,12 +11,15 @@ import system.common.Result;
 import system.common.exceptions.BusinessException;
 import system.mapper.OrderItemMapper;
 import system.mapper.OrderMapper;
+import system.mapper.ProductImageMapper;
 import system.mapper.ProductMapper;
 import system.pojo.Order;
 import system.pojo.OrderItem;
 import system.pojo.Product;
 import system.pojo.dto.OrderDto;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -36,6 +39,9 @@ public class OrderService {
     @Qualifier("ProductMapper")
     private ProductMapper productMapper;
 
+    @Autowired
+    @Qualifier("ProductImageMapper")
+    private ProductImageMapper productImageMapper;
     public Result addOrder(OrderDto orderDto) {
         Order order = new Order();
         String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + orderDto.getToken());
@@ -88,6 +94,31 @@ public class OrderService {
         });
 
         return Result.SUCCESS(order); // 返回创建好的订单对象
+    }
 
+    public Result updateOrder(Integer ordersId,String ordersStatus) {
+        if (orderMapper.updateOrderStatus(ordersId, ordersStatus)>0){
+            return Result.SUCCESS();
+        }else {
+            return Result.FAIL();
+        }
+
+    }
+
+    public Result searchByUser(OrderDto orderDto) {
+        String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + orderDto.getToken());
+        JSONObject jsonObject = JSON.parseObject(json);
+        Integer userId = Integer.valueOf(jsonObject.getString("userId"));
+        List<Order> orders = orderMapper.selectByUserId(userId);
+        orders.forEach(order -> {
+            List<OrderItem> orderItems = orderItemMapper.selectByOrderId(order.getOrdersId());
+            orderItems.forEach(orderItem -> {
+                Product product = productMapper.selectById(orderItem.getProductId());
+                product.setProductImageList(productImageMapper.selectByProduct(product.getProductId()));
+                orderItem.setProduct(product);
+            });
+            order.setOrderItems(orderItems);
+        });
+        return Result.SUCCESS(orders);
     }
 }

@@ -52,8 +52,8 @@ server:
   servlet:
     context-path: / #站点名称
 #自己的配置  通过Spring的方式在项目运行中获取运行自定义的参数配置项
-project:
-  cachePrefix: 'goods:'
+#project:
+#  cachePrefix: 'goods:'
 
 weixin:
   appid: 'wx737031b53995366b'

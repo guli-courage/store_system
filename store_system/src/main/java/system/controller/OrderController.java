@@ -20,4 +20,13 @@ public class OrderController {
         return orderService.addOrder(orderDto);
     }
 
+    @RequestMapping("/updateOrder")
+    public Result updateOrder(Integer orderId,String orderStatus) {
+        return orderService.updateOrder(orderId,orderStatus);
+    }
+
+    @PostMapping("/searchByUser")
+    public Result searchOrder(OrderDto orderDto) {
+        return orderService.searchByUser(orderDto);
+    }
 }

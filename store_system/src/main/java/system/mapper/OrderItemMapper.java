@@ -31,6 +31,13 @@ public interface OrderItemMapper {
     OrderItem selectById(@Param("orderItemId") Integer orderItemId);
 
     /**
+     * 根据商品ID查询订单项
+     * @param productId 商品ID
+     * @return 订单项对象
+     */
+    OrderItem selectByProductId(@Param("productId")Integer productId);
+
+    /**
      * 更新订单项数量
      * @param orderItemId 订单项ID
      * @param quantity 新数量

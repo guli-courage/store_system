@@ -11,6 +11,7 @@ public class OrderItem {
     private Integer orderItemId;
     private Integer ordersId;
     private Integer productId;
+    private Product product;
     private Double unitPrice;
     private Integer quantity;
 }

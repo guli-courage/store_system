@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,4 +17,5 @@ public class Order {
     private String ordersStatus; // 对应ENUM值
     private Date createdAt;
     private Date updatedAt;
+    private List<OrderItem> orderItems;
 }

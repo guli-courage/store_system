@@ -27,7 +27,7 @@ public class UserController {
      */
     @PostMapping("/authLogin")
     public Result authLogin(@RequestBody WXAuth wxAuth) {
-        //System.out.println(wxAuth);
+        //System.out.println("前端数据如下"+wxAuth);
         Result result = userService.authLogin(wxAuth);
         //log.info("{返回的信息如下}",result);
         return result;
