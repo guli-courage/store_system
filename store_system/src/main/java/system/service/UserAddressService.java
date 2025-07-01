@@ -1,8 +1,12 @@
 package system.service;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import system.common.RedisKey;
 import system.common.Result;
 import system.mapper.UserAddressMapper;
 import system.pojo.UserAddress;
@@ -16,22 +20,31 @@ public class UserAddressService {
     @Qualifier("UserAddressMapper")
     private UserAddressMapper userAddressMapper;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     /**
      * 查询用户所有地址
-     * @param userId 用户ID
+     * @param token 用户识别号
      * @return 返回用户的所有地址列表
      */
-    public Result selectAllByUserId(Integer userId) {
+    public Result selectAllByUserId(String token) {
+        String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + token);
+        JSONObject jsonObject = JSON.parseObject(json);
+        Integer userId = Integer.valueOf(jsonObject.getString("userId"));
         List<UserAddress> addresses = userAddressMapper.selectByUserId(userId);
         return Result.SUCCESS(addresses);
     }
 
     /**
      * 查询用户默认地址
-     * @param userId 用户ID
+     * @param token 用户识别号
      * @return 返回用户的默认地址
      */
-    public Result selectDefaultByUserId(Integer userId) {
+    public Result selectDefaultByUserId(String token) {
+        String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + token);
+        JSONObject jsonObject = JSON.parseObject(json);
+        Integer userId = Integer.valueOf(jsonObject.getString("userId"));
         UserAddress address = userAddressMapper.selectDefaultByUserId(userId);
         return Result.SUCCESS(address);
     }
@@ -78,11 +91,14 @@ public class UserAddressService {
 
     /**
      * 设置默认地址
-     * @param userId 用户ID
+     * @param token 用户识别号
      * @param userAddressId 地址ID
      * @return 操作结果
      */
-    public Result setDefaultAddress(Integer userId, Integer userAddressId) {
+    public Result setDefaultAddress(String token, Integer userAddressId) {
+        String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + token);
+        JSONObject jsonObject = JSON.parseObject(json);
+        Integer userId = Integer.valueOf(jsonObject.getString("userId"));
         // 取消所有默认地址
         userAddressMapper.cancelDefaultAddresses(userId);
 

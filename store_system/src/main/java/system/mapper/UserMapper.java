@@ -8,6 +8,8 @@ import system.pojo.User;
 public interface UserMapper {
     User selectByOpenId(@Param("userOpenId")String openId);
 
+    User selectById(@Param("userId")Integer userId);
+
     User selectByNameAndPassword(@Param("userName")String userName,@Param("userPassword")String userPassword);
 
     void insert(User user);

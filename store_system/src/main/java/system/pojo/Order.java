@@ -18,4 +18,5 @@ public class Order {
     private Date createdAt;
     private Date updatedAt;
     private List<OrderItem> orderItems;
+    private OrderAddress orderAddress;
 }

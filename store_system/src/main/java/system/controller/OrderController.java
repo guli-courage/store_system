@@ -29,4 +29,9 @@ public class OrderController {
     public Result searchOrder(OrderDto orderDto) {
         return orderService.searchByUser(orderDto);
     }
+
+    @RequestMapping("/searchStoreOrder")
+    public Result searchStoreOrder(Integer productId) {
+        return orderService.searchByProductId(productId);
+    }
 }

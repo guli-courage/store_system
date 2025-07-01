@@ -6,7 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import system.common.Result;
 import system.model.WXAuth;
 import system.pojo.Store;
+import system.pojo.UserAddress;
+import system.pojo.dto.UserAddressDto;
 import system.pojo.dto.UserDto;
+import system.service.UserAddressService;
 import system.service.UserService;
 
 
@@ -19,6 +22,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserAddressService userAddressService;
 
     /**
      * 微信一键授权登录
@@ -69,5 +74,35 @@ public class UserController {
     @RequestMapping("/loginByName")
     public Result loginByName(String userName,String userPassword) {
         return userService.loginByName(userName,userPassword);
+    }
+
+    @PostMapping("/addAddress")
+    public Result addAddress(@RequestBody UserAddress userAddress) {
+        return userAddressService.insert(userAddress);
+    }
+
+    @PostMapping("/setDefault")
+    public Result setDefault(@RequestBody UserAddressDto userAddressDto) {
+        return userAddressService.setDefaultAddress(userAddressDto.getToken(), userAddressDto.getUserAddress().getUserId());
+    }
+
+    @PostMapping("/searchAllAddress")
+    public Result searchAllAddress(@RequestBody UserAddressDto userAddressDto) {
+        return userAddressService.selectAllByUserId(userAddressDto.getToken());
+    }
+
+    @PostMapping("/searchDefaultAddress")
+    public Result searchDefaultAddress(@RequestBody UserAddressDto userAddressDto) {
+        return userAddressService.selectDefaultByUserId(userAddressDto.getToken());
+    }
+
+    @PostMapping("/updateAddress")
+    public Result updateAddress(@RequestBody UserAddressDto userAddressDto) {
+        return userAddressService.update(userAddressDto.getUserAddress());
+    }
+
+    @PostMapping("/deleteAddress")
+    public Result deleteAddress(@RequestBody UserAddressDto userAddressDto) {
+        return userAddressService.delete(userAddressDto.getUserAddress().getUserAddressId());
     }
 }

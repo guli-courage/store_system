@@ -22,6 +22,16 @@
             `user`.user_openId = #{userOpenId}
     </select>
 
+
+    <select id="selectById" resultMap="userMapper">
+        SELECT
+            `user`.*
+        FROM
+            `user`
+        WHERE
+            `user`.user_Id = #{userId}
+    </select>
+
     <select id="selectByNameAndPassword" resultMap="userMapper">
         SELECT
             user_id,

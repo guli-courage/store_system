@@ -2,6 +2,7 @@ package system.service;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -9,14 +10,10 @@ import org.springframework.stereotype.Service;
 import system.common.RedisKey;
 import system.common.Result;
 import system.common.exceptions.BusinessException;
-import system.mapper.OrderItemMapper;
-import system.mapper.OrderMapper;
-import system.mapper.ProductImageMapper;
-import system.mapper.ProductMapper;
-import system.pojo.Order;
-import system.pojo.OrderItem;
-import system.pojo.Product;
+import system.mapper.*;
+import system.pojo.*;
 import system.pojo.dto.OrderDto;
+import system.pojo.dto.StoreOrderDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +33,21 @@ public class OrderService {
     private OrderItemMapper orderItemMapper;
 
     @Autowired
+    @Qualifier("OrderAddressMapper")
+    private OrderAddressMapper orderAddressMapper;
+
+    @Autowired
     @Qualifier("ProductMapper")
     private ProductMapper productMapper;
 
     @Autowired
+    @Qualifier("UserMapper")
+    private UserMapper userMapper;
+
+    @Autowired
     @Qualifier("ProductImageMapper")
     private ProductImageMapper productImageMapper;
+
     public Result addOrder(OrderDto orderDto) {
         Order order = new Order();
         String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + orderDto.getToken());
@@ -92,7 +98,17 @@ public class OrderService {
             int newSales = product.getProductSales() + itemVo.getQuantity();
             productMapper.updateSales(newSales, product.getProductId());
         });
+        //储存订单地址
+        UserAddress userAddress = orderDto.getUserAddress();
+        OrderAddress orderAddress = new OrderAddress();
+        BeanUtils.copyProperties(userAddress, orderAddress);
 
+        // 处理特殊字段
+        orderAddress.setOrdersId(order.getOrdersId());  // 设置订单ID
+        orderAddress.setOrderAddressId(null); // 重置ID（数据库自增）
+        orderAddressMapper.insertOrderAddress(orderAddress);
+
+        order.setOrderAddress(orderAddress);
         return Result.SUCCESS(order); // 返回创建好的订单对象
     }
 
@@ -120,5 +136,26 @@ public class OrderService {
             order.setOrderItems(orderItems);
         });
         return Result.SUCCESS(orders);
+    }
+
+    public Result searchByProductId(Integer productId) {
+        List<OrderItem> orderItems = orderItemMapper.selectByProductId(productId);
+        List<StoreOrderDto> storeOrderDtoList = new ArrayList<>();
+        orderItems.forEach(orderItem -> {
+            //获取订单总表信息
+            Order order = orderMapper.selectById(orderItem.getOrdersId());
+            StoreOrderDto storeOrderDto = new StoreOrderDto();
+            storeOrderDto.setOrderItem(orderItem);
+            //查询商品
+            Product product = productMapper.selectById(orderItem.getProductId());
+            product.setProductPrice(orderItem.getUnitPrice());
+            product.setProductImageList(productImageMapper.selectByProduct(product.getProductId()));
+            storeOrderDto.setProduct(product);
+            //查询订单地址信息
+            OrderAddress orderAddress = orderAddressMapper.selectByOrderId(order.getOrdersId());
+            storeOrderDto.setOrderAddress(orderAddress);
+            storeOrderDtoList.add(storeOrderDto);
+        });
+        return Result.SUCCESS(storeOrderDtoList);
     }
 }
