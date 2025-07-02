@@ -31,13 +31,22 @@
                 #{productTypeId})
     </insert>
     <select id="selectByNameAndStoreId" resultMap="productMapper">
-        SELECT product.*,
-               product_type.*
-        FROM product,
-             product_type
-        WHERE product.product_type_id = product_type.type_id
-          AND product.product_store_id = #{productStoreId}
-          AND product.product_name = #{productName}
+        SELECT p.product_id,
+               p.product_name,
+               p.product_price,
+               p.product_stock,
+               p.product_sales,
+               p.product_description,
+               p.product_state,
+               p.product_store_id,
+               p.product_type_id,
+               pt.type_id,
+               pt.type_name
+        FROM product p FORCE INDEX (idx_store_name_type)
+        JOIN product_type pt
+        ON p.product_type_id = pt.type_id
+        WHERE p.product_store_id = #{productStoreId}
+          AND p.product_name = #{productName}
     </select>
     <select id="selectByVo" resultMap="productMapper">
         SELECT product.*, product_type.*
@@ -96,13 +105,19 @@
     </select>
 
     <select id="selectById" resultMap="productMapper">
-        SELECT
-            p.product_id, p.product_name, p.product_price,
-            p.product_stock, p.product_sales, p.product_description,
-            p.product_state, p.product_store_id, p.product_type_id,
-            pt.type_id, pt.type_name
+        SELECT p.product_id,
+               p.product_name,
+               p.product_price,
+               p.product_stock,
+               p.product_sales,
+               p.product_description,
+               p.product_state,
+               p.product_store_id,
+               p.product_type_id,
+               pt.type_id,
+               pt.type_name
         FROM product p
-        JOIN product_type pt ON p.product_type_id = pt.type_id
+                 JOIN product_type pt ON p.product_type_id = pt.type_id
         WHERE product_id = #{productId}
     </select>
 

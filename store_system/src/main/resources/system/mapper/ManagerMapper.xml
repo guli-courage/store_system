@@ -10,11 +10,11 @@
     </resultMap>
     <select id="selectByNameAndPass" resultMap="managerMapper">
         SELECT
-            manager.*
-        FROM
-            manager
-        WHERE
-            manager.manager_name = #{managerName} AND
-            manager.manager_password = #{managerPassword}
+            manager_id,
+            manager_name
+        FROM manager
+        WHERE manager_name = #{managerName}
+          AND manager_password = #{managerPassword}
+            LIMIT 1;
     </select>
 </mapper>

@@ -38,16 +38,32 @@
 
     <!-- 根据ID查询地址 -->
     <select id="selectById" resultMap="orderAddressMapper">
-        SELECT *
-        FROM `order_address`
-        WHERE `order_address_id` = #{orderAddressId}
+        SELECT
+            order_address_id,
+            orders_id,
+            receiver_name,
+            receiver_phone,
+            province,
+            city,
+            district,
+            detail_address
+        FROM order_address
+        WHERE order_address_id = #{orderAddressId}
     </select>
 
     <!-- 根据订单ID查询地址 -->
     <select id="selectByOrderId" resultMap="orderAddressMapper">
-        SELECT *
-        FROM `order_address`
-        WHERE `orders_id` = #{ordersId}
+        SELECT
+            order_address_id,
+            orders_id,
+            receiver_name,
+            receiver_phone,
+            province,
+            city,
+            district,
+            detail_address
+        FROM order_address
+        WHERE orders_id = #{ordersId}
     </select>
 
     <!-- 更新订单地址 -->
