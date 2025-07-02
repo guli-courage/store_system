@@ -29,7 +29,7 @@ public class StoreController {
      * @param userDto 只传用户token
      */
     @PostMapping("/searchStore")
-    public Result searchStore(UserDto userDto) {
+    public Result searchStore(@RequestBody UserDto userDto) {
         String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + userDto.getToken());
         JSONObject jsonObject = JSON.parseObject(json);
         Integer userId = Integer.valueOf(jsonObject.getString("userId"));

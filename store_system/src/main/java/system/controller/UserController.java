@@ -8,6 +8,7 @@ import system.model.WXAuth;
 import system.pojo.Store;
 import system.pojo.UserAddress;
 import system.pojo.dto.OrderDto;
+import system.pojo.dto.StoreDto;
 import system.pojo.dto.UserAddressDto;
 import system.pojo.dto.UserDto;
 import system.service.UserAddressService;
@@ -45,8 +46,8 @@ public class UserController {
      * @param store（用户填写的商店信息）
      */
     @PostMapping("/addStore")
-    public Result addStore(@RequestBody Store store) {
-        return userService.addStore(store);
+    public Result addStore(@RequestBody StoreDto storeDto) {
+        return userService.addStore(storeDto);
     }
 
     /**

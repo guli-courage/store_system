@@ -21,6 +21,7 @@ import system.model.WXAuth;
 import system.model.WxUserInfo;
 import system.pojo.Store;
 import system.pojo.User;
+import system.pojo.dto.StoreDto;
 import system.pojo.dto.UserDto;
 import system.utils.JWTUtils;
 import system.utils.MD5Util;
@@ -124,10 +125,15 @@ public class UserService {
 
     /**
      * 申请创建商店
-     * @param store（用户填写的商店数据)
+     * @param storeDto（用户填写的商店数据)
      * @return 如果商店不存在则创建成功，否则失败
      */
-    public Result addStore(Store store) {
+    public Result addStore(StoreDto storeDto) {
+        String json = stringRedisTemplate.opsForValue().get(RedisKey.TOKEEN + storeDto.getToken());
+        JSONObject jsonObject = JSON.parseObject(json);
+        Integer userId = Integer.valueOf(jsonObject.getString("userId"));
+        Store store = storeDto.getStore();
+        store.setStoreUserId(userId);
         store.setStoreState("verify");
         StoreVo storeVo = new StoreVo();
         BeanUtils.copyProperties(store, storeVo);
